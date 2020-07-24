@@ -1,0 +1,46 @@
+extends layout
+
+block content   
+    //script(type='text/javascript').
+            var agents= #{s};
+            console.log(agents);
+    h1 Our contacts:
+    .container.m-5
+      table.table.table-hover
+        thead
+          tr
+            td Agency ID
+            td Address
+            td City
+            td Provence
+            td PO
+            td Country
+            td Phone
+            td Fax
+        tbody
+          each row in agencies
+            tr.table-info
+              td= row.AgencyId
+              td= row.AgncyAddress
+              td= row.AgncyCity
+              td= row.AgncyProv
+              td= row.AgncyPostal
+              td= row.AgncyCountry
+              td= row.AgncyPhone
+              td= row.AgncyFax
+
+    .container.m-5
+      table.table.table-hover
+        thead
+          tr
+            td Agent Id
+            td F Name
+            td L Name
+            td Agency
+        tbody
+          each row in agents
+            tr.table-info
+              td= row.AgentId
+              td= row.AgtFirstName
+              td= row.AgtLastName
+              td= row.AgencyId
