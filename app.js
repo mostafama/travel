@@ -65,6 +65,7 @@ passport.deserializeUser(function (id, done) {
 app.use(passport.initialize());
 // initialize session
 app.use(passport.session());
+// Testing GIT 
 
 
 //app.use('/', indexRouter);
