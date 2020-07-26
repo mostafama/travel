@@ -7,12 +7,8 @@ var logger = require('morgan');
 var indexRouter = require('./routes/index');
 var contactusRouter = require('./routes/contactus');
 var usersRouter = require('./routes/users');
-
-// Authentication
-const session = require("express-session");
-const passport = require("passport");
-const LocalStrategy = require("passport-local").Strategy;
-const data = require('./models/mongoose_data');
+var privateRouter = require('./routes/private');  // A page that is displaied only to logged in users
+const configPassport = require('./configure_passport');
 
 var app = express();
 
@@ -29,48 +25,14 @@ app.use(express.static(path.join(__dirname, 'public'),
     extensions: ["html", "jpg"]
   }));
 
-// Authentication
-// Allows us to assign every user of the app a unique session, which allows us to store user state (are they logged in?)
-// secret is used to sign the session ID cookie – should be a random unique string
-app.use(session({
-  secret: "myTravelWebsite secret",
-  resave: false,
-  saveUninitialized: true
-}));
+// **************  Authentication
+configPassport(app);
+// ************* End Authontiction *****
 
-passport.use(
-  new LocalStrategy((username, password, done) => {
-    data.getUserName(username, (err, user) => {
-      if (err) return done(err);
-      if (!user) {
-        return done(null, false, { msg: "Incorrect username" });
-      }
-      if (user.password !== password) {
-        return done(null, false, { msg: "Incorrect password" });
-      }
-      return done(null, user);
-    });
-  })
-);
-
-passport.serializeUser(function (user, done) {
-  done(null, user.id);
-});
-passport.deserializeUser(function (id, done) {
-  data.getUser(id, function (err, user) {
-    done(err, user);
-  });
-});
-// initialize Passport
-app.use(passport.initialize());
-// initialize session
-app.use(passport.session());
-// Testing GIT 
-
-
-//app.use('/', indexRouter);
+app.use('/', indexRouter);
 app.use('/contactus', contactusRouter);
 app.use('/users', usersRouter);
+app.use('/private', privateRouter); // Example page needes user login first
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

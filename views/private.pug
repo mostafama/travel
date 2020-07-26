@@ -1,0 +1,11 @@
+extends layout
+
+block content
+  if !currentUser
+    h2 You must login first to be able to see this page 
+  else
+    h3 This will how only when the user is logged in. 
+    h3 Welcome in our private page: 
+      span= currentUser.username
+  
+  
